@@ -1,0 +1,195 @@
+.admin-page {
+
+    min-height:100vh;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #050814,
+            #0a1630,
+            #0b2a3a
+        );
+
+    color:#d7e7ff;
+
+    font-family:Verdana,sans-serif;
+
+    padding:40px;
+
+}
+
+
+
+.dashboard {
+
+    max-width:1000px;
+
+    margin:auto;
+
+}
+
+
+
+header {
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:30px;
+
+}
+
+
+
+header button {
+
+    width:auto;
+
+}
+
+
+
+
+
+.admin-login {
+
+    width:380px;
+
+    margin:120px auto;
+
+    padding:40px;
+
+    border-radius:25px;
+
+    background:
+
+        rgba(10,20,40,.8);
+
+    backdrop-filter:blur(15px);
+
+    border:
+
+        1px solid rgba(255,255,255,.15);
+
+    text-align:center;
+
+}
+
+
+
+.admin-login form {
+
+    margin-top:25px;
+
+}
+
+
+
+
+
+.queue {
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:20px;
+
+}
+
+
+
+.video-card {
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:25px;
+
+    border-radius:20px;
+
+    background:
+
+        rgba(255,255,255,.06);
+
+    border:
+
+        1px solid rgba(255,255,255,.12);
+
+    box-shadow:
+
+        0 0 25px rgba(100,170,255,.12);
+
+}
+
+
+
+.video-card a {
+
+    color:#8bdcff;
+
+}
+
+
+
+.actions {
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+}
+
+
+
+.delete {
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #ff6d7a,
+            #ff9a9a
+        );
+
+}
+
+
+
+button {
+
+    cursor:pointer;
+
+}
+
+
+
+@media(max-width:700px){
+
+
+    .admin-page{
+
+        padding:20px;
+
+    }
+
+
+
+    .video-card{
+
+        flex-direction:column;
+
+        gap:20px;
+
+    }
+
+
+}

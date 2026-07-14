@@ -4,30 +4,31 @@ import {
 } from "react";
 
 import supabase from "../lib/supabase";
-
 import {
     login,
     logout,
     getUser
 } from "../lib/auth";
 
-
-
-export default function Admin(){
-
-
-    const [user,setUser] = useState(null);
-
-    const [videos,setVideos] = useState([]);
-
-
-    const [email,setEmail] = useState("");
-
-    const [password,setPassword] = useState("");
+import "./Admin.css";
 
 
 
-    async function loadVideos(){
+export default function Admin() {
+
+
+    const [user, setUser] = useState(null);
+
+    const [videos, setVideos] = useState([]);
+
+    const [email, setEmail] = useState("");
+
+    const [password, setPassword] = useState("");
+
+
+
+
+    async function loadVideos() {
 
 
         const {
@@ -53,8 +54,8 @@ export default function Admin(){
 
         }
 
-
     }
+
 
 
 
@@ -83,14 +84,14 @@ export default function Admin(){
         start();
 
 
-    },[]);
+    }, []);
+
 
 
 
 
 
     async function handleLogin(e){
-
 
         e.preventDefault();
 
@@ -113,7 +114,6 @@ export default function Admin(){
 
 
         location.reload();
-
 
     }
 
@@ -142,7 +142,9 @@ export default function Admin(){
 
         loadVideos();
 
+
     }
+
 
 
 
@@ -164,7 +166,11 @@ export default function Admin(){
 
         loadVideos();
 
+
     }
+
+
+
 
 
 
@@ -174,160 +180,260 @@ export default function Admin(){
 
         return (
 
-            <main>
+            <div className="admin-page">
 
 
-                <h1>
-                    Admin Login
-                </h1>
+                <div className="admin-login">
 
 
-                <form
-                    onSubmit={handleLogin}
-                >
-
-                    <input
-
-                        placeholder="Email"
-
-                        onChange={
-                            e=>
-                            setEmail(
-                                e.target.value
-                            )
-                        }
-
-                    />
+                    <h1>
+                        🌙 Admin Access
+                    </h1>
 
 
-                    <input
-
-                        type="password"
-
-                        placeholder="Password"
-
-                        onChange={
-                            e=>
-                            setPassword(
-                                e.target.value
-                            )
-                        }
-
-                    />
+                    <p>
+                        Stream Control Panel
+                    </p>
 
 
-                    <button>
-                        Login
-                    </button>
+
+                    <form onSubmit={handleLogin}>
 
 
-                </form>
+                        <input
+
+                            placeholder="Email"
+
+                            onChange={
+                                e =>
+                                setEmail(
+                                    e.target.value
+                                )
+                            }
+
+                        />
 
 
-            </main>
+
+                        <input
+
+                            type="password"
+
+                            placeholder="Password"
+
+                            onChange={
+                                e =>
+                                setPassword(
+                                    e.target.value
+                                )
+                            }
+
+                        />
+
+
+
+                        <button>
+                            Login
+                        </button>
+
+
+                    </form>
+
+
+                </div>
+
+
+            </div>
 
         );
-
 
     }
 
 
 
 
+
+
     return (
 
-        <main>
+        <div className="admin-page">
 
 
-            <h1>
-                🎬 Stream Control
-            </h1>
+            <div className="dashboard">
 
 
-            <button
-                onClick={logout}
-            >
-                Logout
-            </button>
+                <header>
 
 
+                    <div>
 
-            <h2>
-                Requests
-            </h2>
-
-
-            {
-                videos.map(video=>(
-
-                    <div
-                        key={video.id}
-                        style={{
-                            border:"1px solid #ccc",
-                            padding:15,
-                            margin:10
-                        }}
-                    >
+                        <h1>
+                            🌙 Stream Control
+                        </h1>
 
                         <p>
-                            Submitted by:
+                            {videos.length}
                             {" "}
-                            {video.submitted_by}
+                            requests
                         </p>
-
-
-                        <a
-                            href={video.url}
-                            target="_blank"
-                        >
-                            {video.url}
-                        </a>
-
-
-                        <p>
-
-                        {
-                            video.approved
-                            ?
-                            "✅ Approved"
-                            :
-                            "⏳ Waiting"
-                        }
-
-                        </p>
-
-
-
-                        {!video.approved && (
-
-                            <button
-                                onClick={()=>
-                                    approve(video.id)
-                                }
-                            >
-                                Approve
-                            </button>
-
-                        )}
-
-
-
-                        <button
-                            onClick={()=>
-                                remove(video.id)
-                            }
-                        >
-                            Delete
-                        </button>
-
 
                     </div>
 
-                ))
-            }
 
 
-        </main>
+                    <button
+                        onClick={logout}
+                    >
+                        Logout
+                    </button>
+
+
+                </header>
+
+
+
+
+
+                <section className="queue">
+
+
+                {
+                    videos.map(
+                        (video,index)=>(
+
+
+                            <div
+                                className="video-card"
+                                key={video.id}
+                            >
+
+
+
+                                <div>
+
+                                    <h2>
+
+                                        #{index+1}
+
+                                    </h2>
+
+
+                                    <p>
+
+                                        Submitted by:
+
+                                        {" "}
+
+                                        <b>
+                                            {
+                                                video.submitted_by
+                                            }
+                                        </b>
+
+                                    </p>
+
+
+
+                                    <a
+
+                                        href={video.url}
+
+                                        target="_blank"
+
+                                    >
+
+                                        Open Video
+
+                                    </a>
+
+
+
+                                    <p>
+
+                                    {
+                                        video.approved
+
+                                        ?
+
+                                        "✅ Approved"
+
+                                        :
+
+                                        "⏳ Waiting"
+
+                                    }
+
+                                    </p>
+
+
+                                </div>
+
+
+
+
+
+                                <div className="actions">
+
+
+                                {
+
+                                    !video.approved &&
+
+                                    <button
+
+                                        onClick={
+                                            () =>
+                                            approve(
+                                                video.id
+                                            )
+                                        }
+
+                                    >
+
+                                        Approve
+
+                                    </button>
+
+                                }
+
+
+
+                                <button
+
+                                    className="delete"
+
+                                    onClick={
+                                        () =>
+                                        remove(
+                                            video.id
+                                        )
+                                    }
+
+                                >
+
+                                    Delete
+
+                                </button>
+
+
+                                </div>
+
+
+                            </div>
+
+
+                        )
+                    )
+                }
+
+
+                </section>
+
+
+            </div>
+
+
+        </div>
 
     );
 

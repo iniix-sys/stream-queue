@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import supabase from "../lib/supabase";
+import "./Home.css";
 
 
 function validYoutube(url) {
@@ -48,39 +49,20 @@ export default function Home() {
             .from("videos")
 
             .select("*", {
-
-                count: "exact",
-
-                head: true
-
+                count:"exact",
+                head:true
             });
 
 
 
-        if (error) {
+        if (!error) {
 
-            console.error(
-                "Queue count error:",
-                error
-            );
-
-            return;
+            setQueueLength(count || 0);
 
         }
 
 
-
-        console.log(
-            "Total queue:",
-            count
-        );
-
-
-        setQueueLength(count || 0);
-
-
     }
-
 
 
 
@@ -90,7 +72,6 @@ export default function Home() {
 
 
         loadQueueLength();
-
 
 
         const channel = supabase
@@ -103,24 +84,19 @@ export default function Home() {
 
                 {
 
-                    event: "*",
+                    event:"*",
 
-                    schema: "public",
+                    schema:"public",
 
-                    table: "videos"
+                    table:"videos"
 
                 },
 
-                () => {
-
-                    loadQueueLength();
-
-                }
+                loadQueueLength
 
             )
 
             .subscribe();
-
 
 
 
@@ -148,23 +124,17 @@ export default function Home() {
 
         if (!validYoutube(url)) {
 
-
             alert(
                 "Please enter a valid YouTube link."
             );
 
-
             return;
-
 
         }
 
 
 
-
-
         setLoading(true);
-
 
 
 
@@ -179,14 +149,11 @@ export default function Home() {
                 submitted_by:
                     name.trim() || "Anonymous",
 
-                approved: false,
+                approved:false,
 
-                played: false
+                played:false
 
             });
-
-
-
 
 
 
@@ -194,25 +161,13 @@ export default function Home() {
 
 
 
+        if(error){
 
-
-        if (error) {
-
-
-            console.error(error);
-
-
-            alert(
-                error.message
-            );
-
+            alert(error.message);
 
             return;
 
-
         }
-
-
 
 
 
@@ -222,12 +177,8 @@ export default function Home() {
 
 
 
-        alert(
-            "Video added to the approval queue!"
-        );
-
-
     }
+
 
 
 
@@ -236,142 +187,96 @@ export default function Home() {
 
     return (
 
-        <main
+        <div className="home">
 
-            style={{
 
-                maxWidth: 600,
+            <div className="request-card">
 
-                margin: "50px auto",
 
-                fontFamily: "Arial",
+                <h1>
+                    🌙 Stream Requests
+                </h1>
 
-                textAlign: "center"
 
-            }}
+                <p className="subtitle">
+                    Send a video request to the stream queue
+                </p>
 
-        >
 
 
-            <h1>
-                🎬 Stream Requests
-            </h1>
+                <div className="queue-box">
 
+                    <span>
+                        Current Queue
+                    </span>
 
+                    <strong>
+                        {queueLength}
+                    </strong>
 
-            <p>
+                    <span>
+                        videos
+                    </span>
 
-                Current Queue:
+                </div>
 
-                <strong>
 
-                    {" "}
 
-                    {queueLength}
 
-                    {" "}
 
-                    videos
+                <form onSubmit={submit}>
 
-                </strong>
 
-            </p>
+                    <input
 
+                        placeholder="YouTube URL"
 
+                        value={url}
 
+                        onChange={
+                            e =>
+                            setUrl(e.target.value)
+                        }
 
+                    />
 
-            <form onSubmit={submit}>
 
 
-                <input
+                    <input
 
-                    placeholder="YouTube URL"
+                        placeholder="Nickname"
 
-                    value={url}
+                        value={name}
 
-                    onChange={
-                        e =>
-                        setUrl(
-                            e.target.value
-                        )
-                    }
+                        onChange={
+                            e =>
+                            setName(e.target.value)
+                        }
 
-                    style={{
+                    />
 
-                        width: "100%",
 
-                        padding: 12,
 
-                        marginBottom: 10
+                    <button disabled={loading}>
 
-                    }}
+                        {
+                            loading
+                            ?
+                            "Sending..."
+                            :
+                            "Submit Request"
+                        }
 
-                />
+                    </button>
 
 
+                </form>
 
 
+            </div>
 
-                <input
 
-                    placeholder="Nickname"
-
-                    value={name}
-
-                    onChange={
-                        e =>
-                        setName(
-                            e.target.value
-                        )
-                    }
-
-                    style={{
-
-                        width: "100%",
-
-                        padding: 12,
-
-                        marginBottom: 10
-
-                    }}
-
-                />
-
-
-
-
-
-                <button
-
-                    disabled={loading}
-
-                >
-
-                    {
-
-                        loading
-
-                        ?
-
-                        "Submitting..."
-
-                        :
-
-                        "Submit Request"
-
-                    }
-
-
-                </button>
-
-
-
-            </form>
-
-
-
-        </main>
+        </div>
 
     );
 
