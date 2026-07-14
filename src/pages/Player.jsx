@@ -11,12 +11,13 @@ function getVideoId(url) {
 
         if (u.hostname.includes("youtu.be")) {
 
-            return u.pathname.slice(1);
+            return u.pathname.substring(1);
 
         }
 
 
         return u.searchParams.get("v");
+
 
     }
 
@@ -50,16 +51,24 @@ export default function Player() {
 
             .eq("played", false)
 
-            .order("created_at", {
-                ascending:true
-            })
+            .order(
+                "created_at",
+                {
+                    ascending: true
+                }
+            )
 
             .limit(1)
             .single();
 
 
 
-        if(error){
+        if (error) {
+
+            console.log(
+                "No video:",
+                error.message
+            );
 
             setVideo(null);
 
@@ -68,14 +77,17 @@ export default function Player() {
         }
 
 
+
         setVideo(data);
+
 
     }
 
 
 
 
-    useEffect(()=>{
+
+    useEffect(() => {
 
 
         loadVideo();
@@ -84,7 +96,7 @@ export default function Player() {
 
         const channel = supabase
 
-            .channel("player")
+            .channel("player_updates")
 
             .on(
 
@@ -92,15 +104,15 @@ export default function Player() {
 
                 {
 
-                    event:"*",
+                    event: "*",
 
-                    schema:"public",
+                    schema: "public",
 
-                    table:"videos"
+                    table: "videos"
 
                 },
 
-                ()=>{
+                () => {
 
                     loadVideo();
 
@@ -112,26 +124,94 @@ export default function Player() {
 
 
 
-        return ()=>{
+
+
+        return () => {
 
             supabase.removeChannel(channel);
 
         };
 
 
-    },[]);
+    }, []);
 
 
 
 
 
-    if(!video){
+
+
+    if (!video) {
+
 
         return (
 
             <div
 
                 style={{
+
+                    position: "fixed",
+
+                    top: 0,
+
+                    left: 0,
+
+                    width: "100vw",
+
+                    height: "100vh",
+
+                    background: "#000",
+
+                    color: "#fff",
+
+                    display: "flex",
+
+                    justifyContent: "center",
+
+                    alignItems: "center",
+
+                    fontFamily: "Arial, sans-serif",
+
+                    fontSize: "40px",
+
+                    textAlign: "center"
+
+                }}
+
+            >
+
+                Waiting for video...
+
+            </div>
+
+        );
+
+
+    }
+
+
+
+
+
+
+    const videoId = getVideoId(video.url);
+
+
+
+    if (!videoId) {
+
+
+        return (
+
+            <div
+
+                style={{
+
+                    position:"fixed",
+
+                    top:0,
+
+                    left:0,
 
                     width:"100vw",
 
@@ -145,29 +225,23 @@ export default function Player() {
 
                     justifyContent:"center",
 
-                    alignItems:"center",
-
-                    fontSize:"40px",
-
-                    overflow:"hidden"
+                    alignItems:"center"
 
                 }}
 
             >
 
-                Waiting for video...
+                Invalid YouTube URL
 
             </div>
 
         );
 
+
     }
 
 
 
-
-
-    const id = getVideoId(video.url);
 
 
 
@@ -176,6 +250,12 @@ export default function Player() {
         <div
 
             style={{
+
+                position:"fixed",
+
+                top:0,
+
+                left:0,
 
                 width:"100vw",
 
@@ -187,9 +267,7 @@ export default function Player() {
 
                 justifyContent:"center",
 
-                alignItems:"center",
-
-                overflow:"hidden"
+                alignItems:"center"
 
             }}
 
@@ -198,10 +276,10 @@ export default function Player() {
             <iframe
 
                 src={
-                    `https://www.youtube.com/embed/${id}?autoplay=1&controls=0`
+                    `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0`
                 }
 
-                title="stream-player"
+                title="OBS Player"
 
                 allow="
                     autoplay;
@@ -223,5 +301,6 @@ export default function Player() {
         </div>
 
     );
+
 
 }
