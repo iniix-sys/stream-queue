@@ -18,7 +18,6 @@ function getVideoId(url) {
 
         return u.searchParams.get("v");
 
-
     }
 
     catch {
@@ -51,12 +50,9 @@ export default function Player() {
 
             .eq("played", false)
 
-            .order(
-                "created_at",
-                {
-                    ascending:true
-                }
-            )
+            .order("created_at", {
+                ascending:true
+            })
 
             .limit(1)
             .single();
@@ -64,8 +60,6 @@ export default function Player() {
 
 
         if(error){
-
-            console.log(error);
 
             setVideo(null);
 
@@ -76,9 +70,7 @@ export default function Player() {
 
         setVideo(data);
 
-
     }
-
 
 
 
@@ -120,7 +112,6 @@ export default function Player() {
 
 
 
-
         return ()=>{
 
             supabase.removeChannel(channel);
@@ -134,55 +125,34 @@ export default function Player() {
 
 
 
-    async function finished(){
-
-
-        if(!video)
-            return;
-
-
-
-        await supabase
-
-            .from("videos")
-
-            .update({
-
-                played:true
-
-            })
-
-            .eq(
-                "id",
-                video.id
-            );
-
-
-
-        loadVideo();
-
-
-    }
-
-
-
-
-
     if(!video){
 
         return (
 
             <div
+
                 style={{
-                    background:"#000",
+
                     width:"100vw",
+
                     height:"100vh",
+
+                    background:"#000",
+
                     color:"#fff",
+
                     display:"flex",
-                    alignItems:"center",
+
                     justifyContent:"center",
-                    fontSize:40
+
+                    alignItems:"center",
+
+                    fontSize:"40px",
+
+                    overflow:"hidden"
+
                 }}
+
             >
 
                 Waiting for video...
@@ -197,20 +167,13 @@ export default function Player() {
 
 
 
-    const id =
-        getVideoId(video.url);
+    const id = getVideoId(video.url);
 
 
 
     return (
 
-        <iframe
-
-            src={
-                `https://www.youtube.com/embed/${id}?autoplay=1&controls=0`
-            }
-
-            title="player"
+        <div
 
             style={{
 
@@ -218,18 +181,46 @@ export default function Player() {
 
                 height:"100vh",
 
-                border:"none"
+                background:"#000",
+
+                display:"flex",
+
+                justifyContent:"center",
+
+                alignItems:"center",
+
+                overflow:"hidden"
 
             }}
 
-            allow="
-                autoplay;
-                fullscreen
-            "
+        >
 
-            onLoad={()=>{}}
+            <iframe
 
-        />
+                src={
+                    `https://www.youtube.com/embed/${id}?autoplay=1&controls=0`
+                }
+
+                title="stream-player"
+
+                allow="
+                    autoplay;
+                    fullscreen
+                "
+
+                style={{
+
+                    width:"100%",
+
+                    height:"100%",
+
+                    border:"none"
+
+                }}
+
+            />
+
+        </div>
 
     );
 
