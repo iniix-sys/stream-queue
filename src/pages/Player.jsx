@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import supabase from "../lib/supabase";
 
-
 function getVideoId(url) {
 
     try {
 
         const u = new URL(url);
-
 
         if (u.hostname.includes("youtu.be")) {
 
@@ -15,9 +13,7 @@ function getVideoId(url) {
 
         }
 
-
         return u.searchParams.get("v");
-
 
     }
 
@@ -29,17 +25,11 @@ function getVideoId(url) {
 
 }
 
-
-
 export default function Player() {
-
 
     const [video, setVideo] = useState(null);
 
-
-
     async function loadVideo() {
-
 
         const { data, error } = await supabase
 
@@ -51,52 +41,33 @@ export default function Player() {
 
             .eq("played", false)
 
-            .order(
-                "created_at",
-                {
-                    ascending: true
-                }
-            )
+            .order("created_at", {
+                ascending: true
+            })
 
             .limit(1)
-            .single();
 
-
+            .maybeSingle();
 
         if (error) {
 
-            console.log(
-                "No video:",
-                error.message
-            );
-
-            setVideo(null);
+            console.error(error);
 
             return;
 
         }
 
-
-
         setVideo(data);
-
 
     }
 
-
-
-
-
     useEffect(() => {
-
 
         loadVideo();
 
-
-
         const channel = supabase
 
-            .channel("player_updates")
+            .channel("player")
 
             .on(
 
@@ -122,27 +93,15 @@ export default function Player() {
 
             .subscribe();
 
-
-
-
-
         return () => {
 
             supabase.removeChannel(channel);
 
         };
 
-
     }, []);
 
-
-
-
-
-
-
     if (!video) {
-
 
         return (
 
@@ -152,17 +111,9 @@ export default function Player() {
 
                     position: "fixed",
 
-                    top: 0,
-
-                    left: 0,
-
-                    width: "100vw",
-
-                    height: "100vh",
+                    inset: 0,
 
                     background: "#000",
-
-                    color: "#fff",
 
                     display: "flex",
 
@@ -170,11 +121,13 @@ export default function Player() {
 
                     alignItems: "center",
 
-                    fontFamily: "Arial, sans-serif",
+                    color: "#ffffff",
 
-                    fontSize: "40px",
+                    fontSize: "48px",
 
-                    textAlign: "center"
+                    fontFamily: "Verdana, sans-serif",
+
+                    overflow: "hidden"
 
                 }}
 
@@ -186,20 +139,11 @@ export default function Player() {
 
         );
 
-
     }
-
-
-
-
-
 
     const videoId = getVideoId(video.url);
 
-
-
     if (!videoId) {
-
 
         return (
 
@@ -207,25 +151,23 @@ export default function Player() {
 
                 style={{
 
-                    position:"fixed",
+                    position: "fixed",
 
-                    top:0,
+                    inset: 0,
 
-                    left:0,
+                    background: "#000",
 
-                    width:"100vw",
+                    display: "flex",
 
-                    height:"100vh",
+                    justifyContent: "center",
 
-                    background:"#000",
+                    alignItems: "center",
 
-                    color:"#fff",
+                    color: "#ffffff",
 
-                    display:"flex",
+                    fontSize: "40px",
 
-                    justifyContent:"center",
-
-                    alignItems:"center"
+                    fontFamily: "Verdana, sans-serif"
 
                 }}
 
@@ -237,13 +179,7 @@ export default function Player() {
 
         );
 
-
     }
-
-
-
-
-
 
     return (
 
@@ -251,23 +187,13 @@ export default function Player() {
 
             style={{
 
-                position:"fixed",
+                position: "fixed",
 
-                top:0,
+                inset: 0,
 
-                left:0,
+                background: "#000",
 
-                width:"100vw",
-
-                height:"100vh",
-
-                background:"#000",
-
-                display:"flex",
-
-                justifyContent:"center",
-
-                alignItems:"center"
+                overflow: "hidden"
 
             }}
 
@@ -275,24 +201,25 @@ export default function Player() {
 
             <iframe
 
-                src={
-                    `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0`
-                }
-
                 title="OBS Player"
 
-                allow="
-                    autoplay;
-                    fullscreen
-                "
+                src={`https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&rel=0&modestbranding=1`}
+
+                allow="autoplay; fullscreen"
+
+                allowFullScreen
 
                 style={{
 
-                    width:"100%",
+                    position: "absolute",
 
-                    height:"100%",
+                    inset: 0,
 
-                    border:"none"
+                    width: "100%",
+
+                    height: "100%",
+
+                    border: "none"
 
                 }}
 
@@ -301,6 +228,5 @@ export default function Player() {
         </div>
 
     );
-
 
 }
